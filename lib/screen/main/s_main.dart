@@ -25,6 +25,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
   bool get extendBody => true;
 
   static double get bottomNavigationBarBorderRadius => 30.0;
+  static const bottomNavigationBarHeight = 60.0;
 
   @override
   void initState() {
@@ -91,6 +92,7 @@ class MainScreenState extends State<MainScreen> with SingleTickerProviderStateMi
 
   Widget _buildBottomNavigationBar(BuildContext context) {
     return Container(
+      height: bottomNavigationBarHeight,
       decoration: const BoxDecoration(
         boxShadow: [
           BoxShadow(color: Colors.black26, spreadRadius: 0, blurRadius: 10),
