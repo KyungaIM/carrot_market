@@ -14,8 +14,9 @@ class FloatingDangnButton extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isExpanded = ref.watch(floatingButtonIsExpendedProvider);
-    final isSmall = ref.watch(floatingButtonIsSmallProvider);
+    final floatingButtonState = ref.watch(floatingButtonStateProvider);
+    final isExpanded = floatingButtonState.isExpanded;
+    final isSmall = floatingButtonState.isSmall;
     return Stack(
       children: [
         IgnorePointer( //전체 영역을 잡는 컨테이너 터치 무시
@@ -55,7 +56,7 @@ class FloatingDangnButton extends ConsumerWidget {
                 ),
                 Tap(
                   onTap: (){
-                    ref.read(floatingButtonIsExpendedProvider.notifier).state = !isExpanded;
+                    ref.read(floatingButtonStateProvider.notifier).onTapButton();
                   },
                   child: AnimatedContainer(
                     duration: duration,

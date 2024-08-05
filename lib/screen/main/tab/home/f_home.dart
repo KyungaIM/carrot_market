@@ -12,14 +12,16 @@ class HomeFragment extends ConsumerStatefulWidget {
 
 class _HomeFragmentState extends ConsumerState<HomeFragment> {
   final scrollController = ScrollController();
+
   @override
   void initState() {
     scrollController.addListener((){
-      final isSmall = ref.read(floatingButtonIsSmallProvider);
+      final floatingButtonState = ref.watch(floatingButtonStateProvider);
+      final isSmall = floatingButtonState.isSmall;
       if (scrollController.position.pixels > 100 && !isSmall){
-        ref.read(floatingButtonIsSmallProvider.notifier).state = true;
+        ref.read(floatingButtonStateProvider.notifier).changeButtonSize(true);
       } else if(scrollController.position.pixels < 100 && isSmall){
-        ref.read(floatingButtonIsSmallProvider.notifier).state = false;
+        ref.read(floatingButtonStateProvider.notifier).changeButtonSize(false);
       }
     });
     super.initState();
