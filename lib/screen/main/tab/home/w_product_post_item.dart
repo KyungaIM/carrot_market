@@ -3,10 +3,10 @@ import 'package:fast_app_base/common/common.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
-import '../../../../entity/post/vo_product_post.dart';
+import '../../../../entity/post/vo_simple_product_post.dart';
 
 class ProductPostItem extends StatelessWidget {
-  final ProductPost post;
+  final SimpleProductPost post;
 
   const ProductPostItem(this.post, {super.key});
 

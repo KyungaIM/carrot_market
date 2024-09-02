@@ -1,5 +1,5 @@
 import 'package:fast_app_base/common/cli_common.dart';
-import 'package:fast_app_base/entity/post/vo_product_post.dart';
+import 'package:fast_app_base/entity/post/vo_simple_product_post.dart';
 import 'package:fast_app_base/entity/product/product_status.dart';
 import 'package:fast_app_base/entity/user/vo_address.dart';
 import 'package:fast_app_base/entity/user/vo_user.dart';
@@ -55,8 +55,8 @@ final product3 = Product(
     ProductStatus.normal,
     [picSum(300), picSum(501), picSum(502), picSum(503)]);
 
-final post1 = ProductPost(product1.user, product1, '글의 내용입니다', const Address('서울특별시주소','플러터동'), 3, 2, DateTime.now().subtract(30.minutes));
-final post2 = ProductPost(product2.user, product1, '글의 내용입니다', const Address('서울특별시주소','앱동'), 3, 2, DateTime.now().subtract(5.minutes));
-final post3 = ProductPost(product3.user, product1, '글의 내용입니다', const Address('서울특별시주소','다트동'), 30, 120,  DateTime.now().subtract(10.seconds));
+final post1 = SimpleProductPost(product1.user, product1, '글의 내용입니다', const Address('서울특별시주소','플러터동'), 3, 2, DateTime.now().subtract(30.minutes));
+final post2 = SimpleProductPost(product2.user, product1, '글의 내용입니다', const Address('서울특별시주소','앱동'), 3, 2, DateTime.now().subtract(5.minutes));
+final post3 = SimpleProductPost(product3.user, product1, '글의 내용입니다', const Address('서울특별시주소','다트동'), 30, 120,  DateTime.now().subtract(10.seconds));
 
 final postList = [post1,post2,post3,post1,post2,post3];
