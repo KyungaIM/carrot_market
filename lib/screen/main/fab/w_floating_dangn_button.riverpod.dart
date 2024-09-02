@@ -9,9 +9,20 @@ final floatingButtonStateProvider =
 
 class FloatingButtonStateNotifier extends StateNotifier<FloatingButtonState> {
   FloatingButtonStateNotifier(super.state);
+  bool needToMakeButtonBigger = false;
 
-  void onTapButton() {
-    state = FloatingButtonState(!state.isExpanded, true);
+  void toggleMenu() {
+    final isExpanded = state.isExpanded;
+    final isSmall = state.isSmall;
+
+    state = state.copyWith(isExpanded:!state.isExpanded, isSmall: needToMakeButtonBigger? false : true );
+    if(needToMakeButtonBigger){
+      needToMakeButtonBigger = false;
+    }
+
+    if(!isSmall && !isExpanded){
+      needToMakeButtonBigger = true;
+    }
   }
 
   void changeButtonSize(bool isSmall) {
