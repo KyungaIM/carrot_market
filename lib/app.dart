@@ -1,9 +1,10 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/theme/custom_theme_app.dart';
-import 'package:fast_app_base/screen/login/s_intro.dart';
+import 'package:fast_app_base/screen/login/s_login.dart';
 import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:flutter/material.dart';
 
+import 'common/data/preference/item/preference_item.dart';
 import 'common/theme/custom_theme.dart';
 
 class App extends StatefulWidget {
@@ -40,14 +41,22 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
     return CustomThemeApp(
       child: Builder(builder: (context) {
         return MaterialApp(
-          navigatorKey: App.navigatorKey,
-          localizationsDelegates: context.localizationDelegates,
-          supportedLocales: context.supportedLocales,
-          locale: context.locale,
-          title: 'Image Finder',
-          theme: context.themeType.themeData,
-          home: const IntroScreen(),
-        );
+            navigatorKey: App.navigatorKey,
+            localizationsDelegates: context.localizationDelegates,
+            supportedLocales: context.supportedLocales,
+            locale: context.locale,
+            title: 'Image Finder',
+            theme: context.themeType.themeData,
+            home: FutureBuilder(
+              future: _getLoginStatus(),
+              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return snapshot.data == true ? const MainScreen() : const LoginScreen();
+                } else {
+                  return const CircularProgressIndicator();
+                }
+              },
+            ));
       }),
     );
   }
@@ -69,5 +78,9 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
         break;
     }
     super.didChangeAppLifecycleState(state);
+  }
+
+  Future<bool> _getLoginStatus() async {
+    return PreferenceItem('isLoggedIn', false).get();
   }
 }

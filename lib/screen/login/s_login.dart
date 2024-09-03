@@ -1,13 +1,20 @@
 import 'package:fast_app_base/common/common.dart';
+import 'package:fast_app_base/common/data/preference/item/preference_item.dart';
 import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:nav/nav.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-class IntroScreen extends StatelessWidget {
-  const IntroScreen({super.key});
+import '../../common/util/auth/auth_util.dart';
 
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,14 +66,16 @@ class IntroScreen extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () async {
                       try {
-                        GoogleSignInAccount? result = await GoogleSignIn().signIn();
-                        print(result);
+                        User? user = await signInWithGoogle();
+                        if(user != null && mounted) {
+                          PreferenceItem('isLoggedIn',false).set(true);
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MainScreen()));
+                        }
                       } catch (error) {
                         if (kDebugMode) {
                           print(error);
                         }
                       }
-                      // context.go('/intro/sign_up');
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.black,
