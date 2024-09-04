@@ -1,10 +1,12 @@
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/data/preference/item/preference_item.dart';
+import 'package:fast_app_base/data/network/dangn_api.dart';
 import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../common/data/preference/prefs.dart';
 import '../../common/util/auth/auth_util.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -67,9 +69,25 @@ class _LoginScreenState extends State<LoginScreen> {
                     onPressed: () async {
                       try {
                         User? user = await signInWithGoogle();
-                        if(user != null && mounted) {
-                          PreferenceItem('isLoggedIn',false).set(true);
-                          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const MainScreen()));
+                        if (user != null && mounted) {
+                          String authEmail = user.email ?? '';
+                          String userName = user.displayName ?? '';
+                          String userPhotoURL = user.photoURL ?? '';
+
+                          // 로그인 성공시 회원 여부 확인후 회원이 아니면 가입 진행
+                          // if(await DaangnApi.memberCheck(authEmail)){
+                          //   DaangnApi.memberSave(user.refreshToken ?? '');
+                          // }
+
+                          //유저정보 저장
+                          Prefs.isLoggedIn.set(true);
+                          Prefs.userEmail.set(authEmail);
+                          Prefs.userName.set(userName);
+                          Prefs.userPhotoURL.set(userPhotoURL);
+
+                          Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(
+                                  builder: (context) => const MainScreen()));
                         }
                       } catch (error) {
                         if (kDebugMode) {
