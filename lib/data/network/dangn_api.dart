@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:fast_app_base/common/cli_common.dart';
 import 'package:fast_app_base/data/network/result/api_error.dart';
+import 'package:fast_app_base/entity/dummies.dart';
+import 'package:fast_app_base/entity/post/vo_product_post.dart';
 import 'package:fast_app_base/screen/notification/vo/notification_dummies.dart';
 import 'package:fast_app_base/screen/notification/vo/vo_notification.dart';
 import '../../common/data/preference/prefs.dart';
@@ -34,6 +36,19 @@ class DaangnApi {
   static final _instance = DaangnApi._();
 
   DaangnApi._();
+
+  static Future<SimpleResult<List<DaangnNotification>, ApiError>>
+      getNotification() async {
+    await sleepAsync(500.ms);
+    return SimpleResult.success(notificationList);
+  }
+
+  static Future<ProductPost>
+      getPost(int id) async {
+    await sleepAsync(500.ms);
+    return ProductPost(
+        simpleProductPost: post1, content: '깨끗하게쓰던 물건입니다' '잘쓰면 좋겠어요' '감사합니다');
+  }
 
   static Future<dynamic> _call({
     required _HttpMethod httpMethod,
@@ -76,7 +91,8 @@ class DaangnApi {
 
       final bool ok = response.data['ok'];
       if (!ok) {
-        throw HttpException(response.data['msg'] ?? 'daangn-api error.', uri: Uri.parse(url));
+        throw HttpException(response.data['msg'] ?? 'daangn-api error.',
+            uri: Uri.parse(url));
       }
       return response.data['info'] ?? response.data['list'];
     } on DioException catch (e) {
@@ -94,14 +110,8 @@ class DaangnApi {
     }
   }
 
-  static Future<SimpleResult<List<DaangnNotification>, ApiError>> getNotification() async {
-    await sleepAsync(500.ms);
-    return SimpleResult.success(notificationList);
-  }
-
   /// 파이어베이스 인증
-  static Future<void> firebaseVerify(String
-  firebaseToken) async {
+  static Future<void> firebaseVerify(String firebaseToken) async {
     final osType = Platform.isAndroid ? '1' : '2'; // 운영체제 유형 (1: 안드로이드, 2: iOS)
     final info = await _call(
       httpMethod: _HttpMethod.postForm,

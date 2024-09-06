@@ -1,6 +1,4 @@
 import 'package:fast_app_base/common/common.dart';
-import 'package:fast_app_base/common/data/preference/item/preference_item.dart';
-import 'package:fast_app_base/data/network/dangn_api.dart';
 import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';

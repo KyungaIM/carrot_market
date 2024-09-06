@@ -16,9 +16,10 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$SimpleProductPost {
+  int get id => throw _privateConstructorUsedError;
   User get user => throw _privateConstructorUsedError;
   Product get product => throw _privateConstructorUsedError;
-  String get content => throw _privateConstructorUsedError;
+  String get title => throw _privateConstructorUsedError;
   Address get address => throw _privateConstructorUsedError;
   int get chatCount => throw _privateConstructorUsedError;
   int get likeCount => throw _privateConstructorUsedError;
@@ -36,9 +37,10 @@ abstract class $SimpleProductPostCopyWith<$Res> {
       _$SimpleProductPostCopyWithImpl<$Res, SimpleProductPost>;
   @useResult
   $Res call(
-      {User user,
+      {int id,
+      User user,
       Product product,
-      String content,
+      String title,
       Address address,
       int chatCount,
       int likeCount,
@@ -62,15 +64,20 @@ class _$SimpleProductPostCopyWithImpl<$Res, $Val extends SimpleProductPost>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? user = null,
     Object? product = null,
-    Object? content = null,
+    Object? title = null,
     Object? address = null,
     Object? chatCount = null,
     Object? likeCount = null,
     Object? createdTime = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
       user: null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
@@ -79,9 +86,9 @@ class _$SimpleProductPostCopyWithImpl<$Res, $Val extends SimpleProductPost>
           ? _value.product
           : product // ignore: cast_nullable_to_non_nullable
               as Product,
-      content: null == content
-          ? _value.content
-          : content // ignore: cast_nullable_to_non_nullable
+      title: null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
               as String,
       address: null == address
           ? _value.address
@@ -136,9 +143,10 @@ abstract class _$$SimpleProductPostImplCopyWith<$Res>
   @override
   @useResult
   $Res call(
-      {User user,
+      {int id,
+      User user,
       Product product,
-      String content,
+      String title,
       Address address,
       int chatCount,
       int likeCount,
@@ -163,15 +171,20 @@ class __$$SimpleProductPostImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
     Object? user = null,
     Object? product = null,
-    Object? content = null,
+    Object? title = null,
     Object? address = null,
     Object? chatCount = null,
     Object? likeCount = null,
     Object? createdTime = null,
   }) {
     return _then(_$SimpleProductPostImpl(
+      null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
       null == user
           ? _value.user
           : user // ignore: cast_nullable_to_non_nullable
@@ -180,9 +193,9 @@ class __$$SimpleProductPostImplCopyWithImpl<$Res>
           ? _value.product
           : product // ignore: cast_nullable_to_non_nullable
               as Product,
-      null == content
-          ? _value.content
-          : content // ignore: cast_nullable_to_non_nullable
+      null == title
+          ? _value.title
+          : title // ignore: cast_nullable_to_non_nullable
               as String,
       null == address
           ? _value.address
@@ -207,15 +220,17 @@ class __$$SimpleProductPostImplCopyWithImpl<$Res>
 /// @nodoc
 
 class _$SimpleProductPostImpl implements _SimpleProductPost {
-  const _$SimpleProductPostImpl(this.user, this.product, this.content,
+  const _$SimpleProductPostImpl(this.id, this.user, this.product, this.title,
       this.address, this.chatCount, this.likeCount, this.createdTime);
 
+  @override
+  final int id;
   @override
   final User user;
   @override
   final Product product;
   @override
-  final String content;
+  final String title;
   @override
   final Address address;
   @override
@@ -227,7 +242,7 @@ class _$SimpleProductPostImpl implements _SimpleProductPost {
 
   @override
   String toString() {
-    return 'SimpleProductPost(user: $user, product: $product, content: $content, address: $address, chatCount: $chatCount, likeCount: $likeCount, createdTime: $createdTime)';
+    return 'SimpleProductPost(id: $id, user: $user, product: $product, title: $title, address: $address, chatCount: $chatCount, likeCount: $likeCount, createdTime: $createdTime)';
   }
 
   @override
@@ -235,9 +250,10 @@ class _$SimpleProductPostImpl implements _SimpleProductPost {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$SimpleProductPostImpl &&
+            (identical(other.id, id) || other.id == id) &&
             (identical(other.user, user) || other.user == user) &&
             (identical(other.product, product) || other.product == product) &&
-            (identical(other.content, content) || other.content == content) &&
+            (identical(other.title, title) || other.title == title) &&
             (identical(other.address, address) || other.address == address) &&
             (identical(other.chatCount, chatCount) ||
                 other.chatCount == chatCount) &&
@@ -248,8 +264,8 @@ class _$SimpleProductPostImpl implements _SimpleProductPost {
   }
 
   @override
-  int get hashCode => Object.hash(runtimeType, user, product, content, address,
-      chatCount, likeCount, createdTime);
+  int get hashCode => Object.hash(runtimeType, id, user, product, title,
+      address, chatCount, likeCount, createdTime);
 
   @JsonKey(ignore: true)
   @override
@@ -261,20 +277,23 @@ class _$SimpleProductPostImpl implements _SimpleProductPost {
 
 abstract class _SimpleProductPost implements SimpleProductPost {
   const factory _SimpleProductPost(
+      final int id,
       final User user,
       final Product product,
-      final String content,
+      final String title,
       final Address address,
       final int chatCount,
       final int likeCount,
       final DateTime createdTime) = _$SimpleProductPostImpl;
 
   @override
+  int get id;
+  @override
   User get user;
   @override
   Product get product;
   @override
-  String get content;
+  String get title;
   @override
   Address get address;
   @override
