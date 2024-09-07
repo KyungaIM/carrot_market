@@ -25,12 +25,12 @@ class PostDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final productPost = ref.watch(productPostProvider(id));
     return productPost.when(
-        data: (data) => _PostDetail(data.simpleProductPost),
+        data: (data) => _PostDetail(simpleProductPost ?? data.simpleProductPost, productPost: data),
         error: (obj, trace) => '에러발생'.text.make(),
         loading: () =>
-        SimpleProductPost != null
+        simpleProductPost != null
             ? _PostDetail(simpleProductPost!)
-            : Center(child: CircularProgressIndicator()));
+            : const Center(child: CircularProgressIndicator()));
   }
 }
 
@@ -50,6 +50,7 @@ class _PostDetail extends HookWidget {
           Positioned.fill(
             child: SingleChildScrollView(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _ImagePager(pageController: pageController, simpleProductPost: simpleProductPost),
                   UserProfileWidget(simpleProductPost.product.user, address: simpleProductPost.address ),
@@ -149,6 +150,7 @@ class _ImagePager extends StatelessWidget {
                     imageUrl: url, fit: BoxFit.fill,))
                   .toList(),
             ),
+            if(simpleProductPost.product.images.length > 1)
             Align(alignment: Alignment.bottomCenter,
                 child: SmoothPageIndicator(
                   controller: pageController,

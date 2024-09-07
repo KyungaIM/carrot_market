@@ -37,6 +37,6 @@ class PostContent extends StatelessWidget {
           ),
         if (productPost != null) productPost!.content.text.make().pOnly(top: 30, bottom: 60),
       ],
-    ).pSymmetric(h: 15);
+    ).p(15);
   }
 }

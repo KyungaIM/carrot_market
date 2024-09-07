@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 const spacer = Spacer();
 
+const width5 = Width(5);
 const width10 = Width(10);
 const width20 = Width(20);
 const width30 = Width(30);
