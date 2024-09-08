@@ -1,17 +1,24 @@
+import 'dart:io';
+import 'dart:math';
+
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/widget/round_button_theme.dart';
 import 'package:fast_app_base/common/widget/w_round_button.dart';
 import 'package:fast_app_base/entity/post/vo_simple_product_post.dart';
 import 'package:fast_app_base/entity/product/product_status.dart';
+import 'package:fast_app_base/screen/dialog/d_message.dart';
 import 'package:fast_app_base/screen/post_detail/s_post_detail.dart';
 import 'package:fast_app_base/screen/write/provider/post_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../../common/util/app_keyboard_util.dart';
 import '../../entity/dummies.dart';
 import '../../entity/product/vo_product.dart';
 import '../../entity/user/vo_address.dart';
+import 'd_select_image_source.dart';
 
 class WriteScreen extends ConsumerStatefulWidget {
   const WriteScreen({super.key});
@@ -22,7 +29,7 @@ class WriteScreen extends ConsumerStatefulWidget {
 
 class _WriteScreenState extends ConsumerState<WriteScreen>
     with KeyboardDetector {
-  final List<String> imageList = [picSum(502)];
+  final List<String> imageList = [];
   final titleController = TextEditingController();
   final priceController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -62,7 +69,32 @@ class _WriteScreenState extends ConsumerState<WriteScreen>
           children: [
             _ImageSelectWidget(
               imageList,
-              onTap: () {},
+              onTap: () async {
+               try {
+                  final selectedSource = await SelectImageSourceDialog().show();
+                  if (selectedSource == null) {
+                    return;
+                  }
+                  final file =
+                      await ImagePicker().pickImage(source: selectedSource);
+                  if (file == null) {
+                    return;
+                  }
+                  setState(() {
+                    imageList.add(file.path);
+                  });
+                } on PlatformException catch(e){
+                 switch(e.code){
+                   case 'invalid_image':
+                     MessageDialog('지원하지 않는 이미지 형식입니다').show();
+                 }
+               }
+              },
+              onTapDeleteImage: (imagePath){
+                setState(() {
+                  imageList.remove(imagePath);
+                });
+              },
             ),
             height10,
             _TitleEditor(titleController),
@@ -107,9 +139,10 @@ class _WriteScreenState extends ConsumerState<WriteScreen>
                 ref.read(postProvider.notifier).state = List.of(list)
                   ..add(simpleProductPost);
                 Nav.pop(context);
-                Nav.push(
-                  PostDetailScreen(simpleProductPost.id, simpleProductPost: simpleProductPost,)
-                );
+                Nav.push(PostDetailScreen(
+                  simpleProductPost.id,
+                  simpleProductPost: simpleProductPost,
+                ));
               },
               isEnabled: isValid,
             ),
@@ -125,8 +158,9 @@ class _WriteScreenState extends ConsumerState<WriteScreen>
 class _ImageSelectWidget extends StatelessWidget {
   final List<String> imageList;
   final VoidCallback onTap;
+  final void Function(String path) onTapDeleteImage;
 
-  _ImageSelectWidget(this.imageList, {super.key, required this.onTap});
+  const _ImageSelectWidget(this.imageList, {super.key, required this.onTap, required this.onTapDeleteImage});
 
   @override
   Widget build(BuildContext context) {
@@ -136,23 +170,70 @@ class _ImageSelectWidget extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              SizedBox(
-                width: 80,
-                height: 80,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.camera_alt),
-                    RichText(
-                        text: TextSpan(children: [
-                      TextSpan(text: imageList.length.toString()),
-                      const TextSpan(text: '/10')
-                    ]))
-                  ],
-                ).box.rounded.border(color: Colors.grey).make(),
-              )
+              SelectImageButton(onTap: onTap, imageList: imageList).pOnly(top: 10,right: 7),
+              ...imageList.map((imagePath) => Stack(
+                children: [
+                    SizedBox(
+                      width: 80,
+                      height: 80,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(15),
+                          child: Image.file(
+                            File(imagePath),
+                            fit: BoxFit.fill,
+                          ).box.rounded.make()),
+                    ).pOnly(left: 4, right: 10, top: 10),
+                  Positioned.fill(
+                    child: Align(
+                      alignment: Alignment.topRight,
+                      child: Tap(
+                        onTap: (){
+                          onTapDeleteImage(imagePath);
+                        },
+                        child: Transform.rotate(
+                          angle: pi/4,
+                          child:const Icon(Icons.add_circle),
+                        ).pOnly(left: 30, bottom: 30),
+                      ),
+                    ),
+                  )
+                  ]
+              ))
             ],
           )),
+    );
+  }
+}
+
+class SelectImageButton extends StatelessWidget {
+  const SelectImageButton({
+    super.key,
+    required this.onTap,
+    required this.imageList,
+  });
+
+  final VoidCallback onTap;
+  final List<String> imageList;
+
+  @override
+  Widget build(BuildContext context) {
+    return Tap(
+      onTap: onTap,
+      child: SizedBox(
+        width: 80,
+        height: 80,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.camera_alt),
+            RichText(
+                text: TextSpan(children: [
+              TextSpan(text: imageList.length.toString()),
+              const TextSpan(text: '/10')
+            ]))
+          ],
+        ).box.rounded.border(color: Colors.grey).make(),
+      ),
     );
   }
 }
