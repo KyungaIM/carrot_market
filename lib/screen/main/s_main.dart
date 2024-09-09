@@ -11,7 +11,8 @@ import 'w_menu_drawer.dart';
 final currentTabProvider = StateProvider<TabItem>((ref) => TabItem.home);
 
 class MainScreen extends ConsumerStatefulWidget {
-  const MainScreen({super.key});
+  final TabItem firstTab;
+  const MainScreen( {super.key, this.firstTab = TabItem.home});
 
   @override
   ConsumerState<MainScreen> createState() => MainScreenState();

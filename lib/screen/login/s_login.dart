@@ -1,14 +1,15 @@
 import 'package:fast_app_base/common/common.dart';
-import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../auth.dart';
 import '../../common/data/preference/prefs.dart';
 import '../../common/util/auth/auth_util.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+  final DaangnAuth auth;
+  const LoginScreen({super.key, required this.auth});
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -78,14 +79,10 @@ class _LoginScreenState extends State<LoginScreen> {
                           // }
 
                           //유저정보 저장
-                          Prefs.isLoggedIn.set(true);
+                          widget.auth.signIn('','');
                           Prefs.userEmail.set(authEmail);
                           Prefs.userName.set(userName);
                           Prefs.userPhotoURL.set(userPhotoURL);
-
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => const MainScreen()));
                         }
                       } catch (error) {
                         if (kDebugMode) {

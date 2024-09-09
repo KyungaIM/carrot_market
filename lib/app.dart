@@ -1,18 +1,21 @@
+import 'package:fast_app_base/auth.dart';
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/theme/custom_theme_app.dart';
 import 'package:fast_app_base/screen/login/s_login.dart';
 import 'package:fast_app_base/screen/main/s_main.dart';
+import 'package:fast_app_base/screen/main/tab/tab_item.dart';
+import 'package:fast_app_base/screen/post_detail/s_post_detail.dart';
 import 'package:flutter/material.dart';
-
-import 'common/data/preference/item/preference_item.dart';
+import 'package:go_router/go_router.dart';
+import 'common/route/transition/fade_transition_page.dart';
 import 'common/theme/custom_theme.dart';
 
 class App extends StatefulWidget {
-  static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
-
   ///light, dark 테마가 준비되었고, 시스템 테마를 따라가게 하려면 해당 필드를 제거 하시면 됩니다.
   static const defaultTheme = CustomTheme.dark;
   static bool isForeground = true;
+  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey();
 
   const App({super.key});
 
@@ -20,9 +23,9 @@ class App extends StatefulWidget {
   State<App> createState() => AppState();
 }
 
-class AppState extends State<App> with Nav, WidgetsBindingObserver {
-  @override
-  GlobalKey<NavigatorState> get navigatorKey => App.navigatorKey;
+class AppState extends State<App> with WidgetsBindingObserver {
+  final ValueKey<String> _scaffoldKey = const ValueKey<String>('App scaffold');
+  final DaangnAuth _auth = DaangnAuth();
 
   @override
   void initState() {
@@ -40,27 +43,60 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
   Widget build(BuildContext context) {
     return CustomThemeApp(
       child: Builder(builder: (context) {
-        return MaterialApp(
-            navigatorKey: App.navigatorKey,
+        return DaangnAuthScope(
+          notifier: _auth,
+          child: MaterialApp.router(
+            scaffoldMessengerKey: App.scaffoldMessengerKey,
+            routerConfig: _router,
             localizationsDelegates: context.localizationDelegates,
             supportedLocales: context.supportedLocales,
             locale: context.locale,
             title: 'Image Finder',
             theme: context.themeType.themeData,
-            home: FutureBuilder(
-              future: _getLoginStatus(),
-              builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-              //  return const MainScreen();
-                if (snapshot.connectionState == ConnectionState.done) {
-                  return snapshot.data == true ? const MainScreen() : const LoginScreen();
-                } else {
-                  return const CircularProgressIndicator();
-                }
-              },
-            ));
+          ),
+        );
       }),
     );
   }
+
+  late final GoRouter _router = GoRouter(routes: <GoRoute>[
+    GoRoute(
+      path: '/',
+      redirect: (_, __) => '/main',
+    ),
+    GoRoute(
+      path: '/signin',
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          FadeTransitionPage(
+              key: state.pageKey, child: LoginScreen(auth: _auth)),
+    ),
+    GoRoute(path: '/main', redirect: (_, __) => '/main/home'),
+    GoRoute(
+      path: '/productPost/:postId',
+      redirect: (BuildContext context, GoRouterState state) =>
+          '/main/home/${state.pathParameters['postId']}',
+    ),
+    GoRoute(
+      path: '/main/:kind(home|localLife|nearMe|chat|my)',
+      pageBuilder: (BuildContext context, GoRouterState state) =>
+          FadeTransitionPage(
+        key: _scaffoldKey,
+        child: MainScreen(
+          firstTab: TabItem.find(state.pathParameters['kind']),
+        ),
+      ),
+      routes: <GoRoute>[
+        GoRoute(
+          path: ':postId',
+          builder: (BuildContext context, GoRouterState state) {
+            final String postId = state.pathParameters['postId']!;
+            return PostDetailScreen(int.parse(postId));
+          },
+        ),
+      ],
+      redirect: _auth.guard,
+    ),
+  ]);
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
@@ -79,9 +115,5 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
         break;
     }
     super.didChangeAppLifecycleState(state);
-  }
-
-  Future<bool> _getLoginStatus() async {
-    return PreferenceItem('isLoggedIn', false).get();
   }
 }

@@ -26,6 +26,6 @@ void main() async {
         fallbackLocale: const Locale('ko'),
         path: 'assets/translations',
         useOnlyLangCode: true,
-        child: const App()),
+        child: App()),
   ));
 }

@@ -62,7 +62,6 @@ Future<void> signOut() async {
     }
     await Prefs.accessToken.delete();
     await Prefs.refreshToken.delete();
-    await Prefs.isLoggedIn.set(false);
 
     await DaangnApi.logoutLogSave(authEmail, osType);
 }
