@@ -15,15 +15,18 @@ class ProductPostItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tap(
       onTap: (){
-        Nav.push(PostDetailScreen(1,simpleProductPost: post));
+        Nav.push(PostDetailScreen(post.id,simpleProductPost: post));
       },
       child: Stack(
         children: [Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
           ClipRRect(
               borderRadius: BorderRadius.circular(10),
-              child: CachedNetworkImage(
-                imageUrl: post.product.images[0],
-                width: 150,
+              child: Hero(
+                tag: '${post.id}_${post.product.images[0]}',
+                child: CachedNetworkImage(
+                  imageUrl: post.product.images[0],
+                  width: 150,
+                ),
               )),
           const Width(10),
           Expanded(

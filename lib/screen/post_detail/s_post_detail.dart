@@ -14,7 +14,6 @@ import '../../common/widget/w_round_button.dart';
 import '../../common/widget/w_vertical_line.dart';
 import '../../entity/product/vo_product.dart';
 
-
 class PostDetailScreen extends ConsumerWidget {
   final SimpleProductPost? simpleProductPost;
   final int id;
@@ -25,10 +24,10 @@ class PostDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final productPost = ref.watch(productPostProvider(id));
     return productPost.when(
-        data: (data) => _PostDetail(simpleProductPost ?? data.simpleProductPost, productPost: data),
+        data: (data) => _PostDetail(simpleProductPost ?? data.simpleProductPost,
+            productPost: data),
         error: (obj, trace) => '에러발생'.text.make(),
-        loading: () =>
-        simpleProductPost != null
+        loading: () => simpleProductPost != null
             ? _PostDetail(simpleProductPost!)
             : const Center(child: CircularProgressIndicator()));
   }
@@ -52,9 +51,14 @@ class _PostDetail extends HookWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _ImagePager(pageController: pageController, simpleProductPost: simpleProductPost),
-                  UserProfileWidget(simpleProductPost.product.user, address: simpleProductPost.address ),
-                  PostContent(simpleProductPost: simpleProductPost, productPost: productPost),
+                  _ImagePager(
+                      pageController: pageController,
+                      simpleProductPost: simpleProductPost),
+                  UserProfileWidget(simpleProductPost.product.user,
+                      address: simpleProductPost.address),
+                  PostContent(
+                      simpleProductPost: simpleProductPost,
+                      productPost: productPost),
                 ],
               ),
             ),
@@ -69,13 +73,14 @@ class _PostDetail extends HookWidget {
     );
   }
 }
+
 class PostDetailBottomMenu extends StatelessWidget {
   final Product product;
 
   const PostDetailBottomMenu(
-      this.product, {
-        super.key,
-      });
+    this.product, {
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -140,29 +145,33 @@ class _ImagePager extends StatelessWidget {
     return SizedBox(
       height: context.deviceWidth,
       width: context.deviceWidth,
-      child: Stack(
-          children: [
-            PageView(
+      child: Stack(children: [
+        PageView(
+          controller: pageController,
+          children: simpleProductPost.product.images
+              .map((url) => Hero(
+                    tag:
+                        '${simpleProductPost.id}_$url',
+                    child: CachedNetworkImage(
+                      imageUrl: url,
+                      fit: BoxFit.fill,
+                    ),
+                  ))
+              .toList(),
+        ),
+        if (simpleProductPost.product.images.length > 1)
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: SmoothPageIndicator(
               controller: pageController,
-              children: simpleProductPost.product.images
-                  .map((url) =>
-                  CachedNetworkImage(
-                    imageUrl: url, fit: BoxFit.fill,))
-                  .toList(),
+              count: simpleProductPost.product.images.length,
+              effect: const JumpingDotEffect(
+                  verticalOffset: 10,
+                  dotColor: Colors.white54,
+                  activeDotColor: Colors.black45),
             ),
-            if(simpleProductPost.product.images.length > 1)
-            Align(alignment: Alignment.bottomCenter,
-                child: SmoothPageIndicator(
-                  controller: pageController,
-                  count: simpleProductPost.product.images.length,
-                  effect: const JumpingDotEffect(
-                    verticalOffset: 10,
-                    dotColor:Colors.white54,
-                    activeDotColor: Colors.black45
-                  ),
-                ),)
-          ]
-      ),
+          )
+      ]),
     );
   }
 }
@@ -181,14 +190,22 @@ class _AppBar extends StatelessWidget {
             Nav.pop(context);
           },
           icon: const Icon(
-            Icons.arrow_back_ios_new_rounded, color: Colors.white,),
+            Icons.arrow_back_ios_new_rounded,
+            color: Colors.white,
+          ),
         ),
         actions: [
-          IconButton(onPressed: () {},
-              icon: const Icon(Icons.share, color: Colors.white,)),
-          IconButton(onPressed: () {},
+          IconButton(
+              onPressed: () {},
+              icon: const Icon(
+                Icons.share,
+                color: Colors.white,
+              )),
+          IconButton(
+              onPressed: () {},
               icon: const Icon(Icons.more_vert, color: Colors.white)),
-        ],),
+        ],
+      ),
     );
   }
 }
