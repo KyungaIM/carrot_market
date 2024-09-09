@@ -50,7 +50,7 @@ class AppState extends State<App> with Nav, WidgetsBindingObserver {
             home: FutureBuilder(
               future: _getLoginStatus(),
               builder: (BuildContext context, AsyncSnapshot<bool> snapshot) {
-                return const MainScreen();
+              //  return const MainScreen();
                 if (snapshot.connectionState == ConnectionState.done) {
                   return snapshot.data == true ? const MainScreen() : const LoginScreen();
                 } else {
