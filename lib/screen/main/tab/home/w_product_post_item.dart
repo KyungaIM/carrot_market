@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../../entity/post/vo_simple_product_post.dart';
-import '../../../post_detail/s_post_detail.dart';
 
 class ProductPostItem extends StatelessWidget {
   final SimpleProductPost post;
@@ -15,7 +14,7 @@ class ProductPostItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return Tap(
       onTap: (){
-        Nav.push(PostDetailScreen(post.id,simpleProductPost: post));
+        context.go('/main/localLife/${post.id}', extra: post);
       },
       child: Stack(
         children: [Row(crossAxisAlignment: CrossAxisAlignment.start, children: [

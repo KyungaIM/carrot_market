@@ -38,7 +38,7 @@ class DaangnAuth extends ChangeNotifier {
     if (!signedIn && !signingIn) {
       return '/signin';
     }
-    // Go to /books if the user is signed in and tries to go to /signin.
+    // Go to / if the user is signed in and tries to go to /signin.
     else if (signedIn && signingIn) {
       return '/';
     }

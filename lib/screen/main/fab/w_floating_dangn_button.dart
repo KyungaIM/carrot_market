@@ -51,7 +51,9 @@ class FloatingDangnButton extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _floatItem('알바', '$basePath/fab/fab_01.png'),
+                            Tap(onTap: (){
+                              context.go('/main/localLife');
+                            }, child: _floatItem('알바', '$basePath/fab/fab_01.png'),),
                             _floatItem('과외/클래스', '$basePath/fab/fab_02.png'),
                             _floatItem('농수산물', '$basePath/fab/fab_03.png'),
                             _floatItem('부동산', '$basePath/fab/fab_04.png'),

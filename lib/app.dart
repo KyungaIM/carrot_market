@@ -1,12 +1,12 @@
 import 'package:fast_app_base/auth.dart';
 import 'package:fast_app_base/common/common.dart';
 import 'package:fast_app_base/common/theme/custom_theme_app.dart';
+import 'package:fast_app_base/entity/post/vo_simple_product_post.dart';
 import 'package:fast_app_base/screen/login/s_login.dart';
 import 'package:fast_app_base/screen/main/s_main.dart';
 import 'package:fast_app_base/screen/main/tab/tab_item.dart';
 import 'package:fast_app_base/screen/post_detail/s_post_detail.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'common/route/transition/fade_transition_page.dart';
 import 'common/theme/custom_theme.dart';
 
@@ -59,44 +59,53 @@ class AppState extends State<App> with WidgetsBindingObserver {
     );
   }
 
-  late final GoRouter _router = GoRouter(routes: <GoRoute>[
-    GoRoute(
-      path: '/',
-      redirect: (_, __) => '/main',
-    ),
-    GoRoute(
-      path: '/signin',
-      pageBuilder: (BuildContext context, GoRouterState state) =>
-          FadeTransitionPage(
-              key: state.pageKey, child: LoginScreen(auth: _auth)),
-    ),
-    GoRoute(path: '/main', redirect: (_, __) => '/main/home'),
-    GoRoute(
-      path: '/productPost/:postId',
-      redirect: (BuildContext context, GoRouterState state) =>
-          '/main/home/${state.pathParameters['postId']}',
-    ),
-    GoRoute(
-      path: '/main/:kind(home|localLife|nearMe|chat|my)',
-      pageBuilder: (BuildContext context, GoRouterState state) =>
-          FadeTransitionPage(
-        key: _scaffoldKey,
-        child: MainScreen(
-          firstTab: TabItem.find(state.pathParameters['kind']),
-        ),
+  late final GoRouter _router = GoRouter(
+    routes: <GoRoute>[
+      GoRoute(
+        path: '/',
+        redirect: (_, __) => '/main/home',
       ),
-      routes: <GoRoute>[
-        GoRoute(
-          path: ':postId',
-          builder: (BuildContext context, GoRouterState state) {
-            final String postId = state.pathParameters['postId']!;
-            return PostDetailScreen(int.parse(postId));
-          },
+      GoRoute(
+        path: '/signIn',
+        pageBuilder: (BuildContext context, GoRouterState state) =>
+            FadeTransitionPage(
+                key: state.pageKey, child: LoginScreen(auth: _auth)),
+      ),
+      GoRoute(path: '/main', redirect: (_, __) => '/main/home'),
+      GoRoute(
+        path: '/productPost/:postId',
+        redirect: (BuildContext context, GoRouterState state) =>
+            '/main/home/${state.pathParameters['postId']}',
+      ),
+      GoRoute(
+        path: '/main/:kind(home|localLife|nearMe|chat|my)',
+        pageBuilder: (BuildContext context, GoRouterState state) =>
+            FadeTransitionPage(
+          key: _scaffoldKey,
+          child: MainScreen(
+            firstTab: TabItem.find(state.pathParameters['kind']),
+          ),
         ),
-      ],
-      redirect: _auth.guard,
-    ),
-  ]);
+        routes: <GoRoute>[
+          GoRoute(
+            path: ':postId',
+            builder: (BuildContext context, GoRouterState state) {
+              final String postId = state.pathParameters['postId']!;
+              if(state.extra != null){
+                final post = state.extra as SimpleProductPost;
+                return PostDetailScreen(int.parse(postId),simpleProductPost: post,);
+              }else{
+                return PostDetailScreen(int.parse(postId));
+              }
+            },
+          ),
+        ],
+      ),
+    ],
+    redirect: _auth.guard,
+    refreshListenable: _auth,
+    debugLogDiagnostics: true,
+  );
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
