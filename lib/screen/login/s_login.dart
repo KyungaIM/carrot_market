@@ -1,11 +1,6 @@
 import 'package:fast_app_base/common/common.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-
 import '../../auth.dart';
-import '../../common/data/preference/prefs.dart';
-import '../../common/util/auth/auth_util.dart';
 
 class LoginScreen extends StatefulWidget {
   final DaangnAuth auth;
@@ -66,29 +61,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: ElevatedButton(
                     onPressed: () async {
-                      try {
-                        User? user = await signInWithGoogle();
-                        if (user != null && mounted) {
-                          String authEmail = user.email ?? '';
-                          String userName = user.displayName ?? '';
-                          String userPhotoURL = user.photoURL ?? '';
-
-                          // 로그인 성공시 회원 여부 확인후 회원이 아니면 가입 진행
-                          // if(await DaangnApi.memberCheck(authEmail)){
-                          //   DaangnApi.memberSave(user.refreshToken ?? '');
-                          // }
-
-                          //유저정보 저장
-                          widget.auth.signIn('','');
-                          Prefs.userEmail.set(authEmail);
-                          Prefs.userName.set(userName);
-                          Prefs.userPhotoURL.set(userPhotoURL);
-                        }
-                      } catch (error) {
-                        if (kDebugMode) {
-                          print(error);
-                        }
-                      }
+                        widget.auth.signIn();
                     },
                     style: ElevatedButton.styleFrom(
                       foregroundColor: Colors.black,

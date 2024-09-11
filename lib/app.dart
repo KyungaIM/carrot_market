@@ -16,7 +16,8 @@ class App extends ConsumerStatefulWidget {
   ///light, dark 테마가 준비되었고, 시스템 테마를 따라가게 하려면 해당 필드를 제거 하시면 됩니다.
   static const defaultTheme = CustomTheme.dark;
   static bool isForeground = true;
-  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey = GlobalKey();
+  static final GlobalKey<ScaffoldMessengerState> scaffoldMessengerKey =
+      GlobalKey();
   static final GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
   const App({super.key});
@@ -74,7 +75,8 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
         path: '/signIn',
         pageBuilder: (BuildContext context, GoRouterState state) =>
             FadeTransitionPage(
-                key: state.pageKey, child: LoginScreen(auth: _auth)),
+                key: state.pageKey,
+                child: LoginScreen(auth: _auth)),
       ),
       GoRoute(path: '/main', redirect: (_, __) => '/main/home'),
       GoRoute(
@@ -96,10 +98,13 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
             path: ':postId',
             builder: (BuildContext context, GoRouterState state) {
               final String postId = state.pathParameters['postId']!;
-              if(state.extra != null){
+              if (state.extra != null) {
                 final post = state.extra as SimpleProductPost;
-                return PostDetailScreen(int.parse(postId),simpleProductPost: post,);
-              }else{
+                return PostDetailScreen(
+                  int.parse(postId),
+                  simpleProductPost: post,
+                );
+              } else {
                 return PostDetailScreen(int.parse(postId));
               }
             },

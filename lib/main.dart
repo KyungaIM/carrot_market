@@ -22,10 +22,10 @@ void main() async {
   setLocaleMessages('ko', KoMessages());
   runApp(ProviderScope(
     child: EasyLocalization(
-        supportedLocales: const [Locale('ko')],
+        supportedLocales: const [Locale('ko'), Locale('en')],
         fallbackLocale: const Locale('ko'),
         path: 'assets/translations',
         useOnlyLangCode: true,
-        child: App()),
+        child: const App()),
   ));
 }
