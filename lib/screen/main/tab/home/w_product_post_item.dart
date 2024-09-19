@@ -1,7 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fast_app_base/common/common.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 import '../../../../entity/post/vo_simple_product_post.dart';
 
@@ -38,8 +37,7 @@ class ProductPostItem extends StatelessWidget {
                     .color(context.appColors.lessImportant)
                     .make(),
                 '•'.text.color(context.appColors.lessImportant).make(),
-                timeago
-                    .format(post.createdTime, locale: context.locale.languageCode)
+                post.createdTime.timeago
                     .text
                     .color(context.appColors.lessImportant)
                     .make(),

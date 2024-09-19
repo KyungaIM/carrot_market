@@ -8,6 +8,7 @@ export 'package:nav/nav.dart';
 export 'package:go_router/go_router.dart';
 export 'package:quiver/strings.dart';
 export 'package:velocity_x/velocity_x.dart';
+export 'package:fast_app_base/common/dart/extension/datetime_extension.dart';
 
 export '../common/dart/extension/animation_controller_extension.dart';
 export '../common/dart/extension/collection_extension.dart';
@@ -15,6 +16,7 @@ export '../common/dart/extension/context_extension.dart';
 export '../common/dart/extension/num_extension.dart';
 export '../common/dart/extension/velocityx_extension.dart';
 export '../common/dart/kotlin_style/kotlin_extension.dart';
+
 export 'constants.dart';
 export 'dart/extension/snackbar_context_extension.dart';
 export 'theme/color/abs_theme_colors.dart';
